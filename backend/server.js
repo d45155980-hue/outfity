@@ -24,7 +24,7 @@ const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 
-connectDB();
+connectDB().catch(() => console.log('MongoDB connection failed, starting server anyway...'));
 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });

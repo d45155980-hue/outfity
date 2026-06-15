@@ -11,8 +11,7 @@ const connectDB = async (retries = 5, delay = 5000) => {
       if (i < retries - 1) {
         await new Promise((res) => setTimeout(res, delay));
       } else {
-        console.error('All MongoDB connection attempts failed. Exiting...');
-        process.exit(1);
+        console.error('All MongoDB connection attempts failed. Continuing without DB...');
       }
     }
   }
