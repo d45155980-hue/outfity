@@ -14,6 +14,7 @@ const defaultSlides = [
     primaryBtn: { text: 'Shop Now', href: '/products?category=men' },
     secondaryBtn: { text: 'Explore More', href: '/products?category=men&sort=newest' },
     gradient: 'bg-gradient-to-r from-stone-900 via-stone-800 to-stone-700',
+    imageUrl: undefined as string | undefined,
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const defaultSlides = [
     primaryBtn: { text: 'Shop Now', href: '/products?category=women' },
     secondaryBtn: { text: 'Explore More', href: '/products?category=women&sort=newest' },
     gradient: 'bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-700',
+    imageUrl: undefined as string | undefined,
   },
   {
     id: 3,
@@ -32,6 +34,7 @@ const defaultSlides = [
     primaryBtn: { text: 'Shop Now', href: '/products?category=men&isSale=true' },
     secondaryBtn: { text: 'Explore More', href: '/products?category=women' },
     gradient: 'bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-700',
+    imageUrl: undefined as string | undefined,
   },
   {
     id: 4,
@@ -41,6 +44,7 @@ const defaultSlides = [
     primaryBtn: { text: 'Shop Now', href: '/products?sort=newest' },
     secondaryBtn: { text: 'Explore More', href: '/products' },
     gradient: 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700',
+    imageUrl: undefined as string | undefined,
   },
 ];
 
