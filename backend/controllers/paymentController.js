@@ -1,18 +1,36 @@
 const ErrorHandler = require('../utils/errorHandler');
 const Razorpay = require('razorpay');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const crypto = require('crypto');
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+let stripe = null;
+try {
+  if (process.env.STRIPE_SECRET_KEY && !process.env.STRIPE_SECRET_KEY.startsWith('your_')) {
+    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  }
+} catch (e) {
+  console.log('Stripe initialization skipped:', e.message);
+}
+
+let razorpay = null;
+try {
+  if (process.env.RAZORPAY_KEY_ID && !process.env.RAZORPAY_KEY_ID.startsWith('your_')) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+} catch (e) {
+  console.log('Razorpay initialization skipped:', e.message);
+}
 
 exports.createRazorpayOrder = async (req, res, next) => {
   try {
     const { amount, currency } = req.body;
     if (!amount) {
       return next(new ErrorHandler('Amount is required', 400));
+    }
+    if (!razorpay) {
+      return next(new ErrorHandler('Razorpay not configured', 503));
     }
     const options = {
       amount,
@@ -56,6 +74,9 @@ exports.createStripePaymentIntent = async (req, res, next) => {
     const { amount, currency } = req.body;
     if (!amount) {
       return next(new ErrorHandler('Amount is required', 400));
+    }
+    if (!stripe) {
+      return next(new ErrorHandler('Stripe not configured', 503));
     }
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
