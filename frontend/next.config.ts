@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: '**.onrender.com',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: '**.up.railway.app',
+        pathname: '/uploads/**',
+      },
     ],
   },
 };
