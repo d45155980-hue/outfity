@@ -34,9 +34,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <h1 className="text-xl font-bold text-stone-900 tracking-tight">My Account</h1>
         <button
           onClick={() => setMobileSidebarOpen(true)}
-          className="lg:hidden p-2 text-stone-600 border border-stone-200 rounded-lg"
+          className="lg:hidden p-3 text-stone-600 border border-stone-200 rounded-lg"
         >
-          <HiOutlineMenu size={20} />
+          <HiOutlineMenu size={22} />
         </button>
       </div>
 

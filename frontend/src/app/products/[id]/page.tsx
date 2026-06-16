@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -8,19 +8,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '@/store/slices/cartSlice';
 import { addToWishlist, removeFromWishlist } from '@/store/slices/wishlistSlice';
 import { RootState } from '@/store/store';
-import { HiOutlineHeart, HiHeart, HiOutlineMinus, HiOutlinePlus, HiOutlineShoppingBag, HiOutlineShieldCheck, HiOutlineTruck, HiOutlineRefresh } from 'react-icons/hi';
+import { HiOutlineHeart, HiHeart, HiOutlineMinus, HiOutlinePlus, HiOutlineShoppingBag, HiOutlineShieldCheck, HiOutlineTruck, HiOutlineRefresh, HiOutlineStar, HiStar } from 'react-icons/hi';
 import Breadcrumb from '@/components/Breadcrumb';
 import ImageGallery from '@/components/ImageGallery';
 import ReviewCard from '@/components/ReviewCard';
 import ProductCard from '@/components/ProductCard';
 import api from '@/lib/api';
 import { formatPrice, getDiscountPercent } from '@/lib/utils';
+import { API_BASE_URL } from '@/lib/constants';
 import toast from 'react-hot-toast';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
   const { wishlistItems } = useSelector((state: RootState) => state.wishlist);
   const { id } = use(params);
   const [product, setProduct] = useState<any>(null);
@@ -32,6 +33,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'description' | 'reviews'>('description');
   const [addedToCart, setAddedToCart] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [userReview, setUserReview] = useState<any>(null);
+
+  const fetchReviews = useCallback(async () => {
+    const res = await api.get(`/products/${id}/reviews`).catch(() => ({ data: { reviews: [] } }));
+    const allReviews = res.data.reviews || [];
+    setReviews(allReviews.filter((r: any) => r.isApproved));
+    const myReview = allReviews.find((r: any) => r.user?._id === currentUser?._id);
+    if (myReview) {
+      setUserReview(myReview);
+      setReviewRating(myReview.rating);
+      setReviewComment(myReview.comment);
+    }
+  }, [id, currentUser?._id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,12 +62,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         setSelectedColor(p.colors?.[0] || { name: 'Default', hex: '#000' });
         setQuantity(1);
 
-        const [revRes, relRes] = await Promise.all([
-          api.get(`/products/${id}/reviews`).catch(() => ({ data: { reviews: [] } })),
-          api.get('/products', { params: { category: p.category?.name || p.category, limit: 5 } }).catch(() => ({ data: { products: [] } })),
-        ]);
-        setReviews(revRes.data.reviews || []);
+        const relRes = await api.get('/products', { params: { category: p.category?.name || p.category, limit: 5 } }).catch(() => ({ data: { products: [] } }));
         setRelated((relRes.data.products || []).filter((r: any) => r._id !== id));
+        await fetchReviews();
       } catch {
         toast.error('Product not found');
         router.push('/products');
@@ -58,7 +73,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       }
     };
     fetchData();
-  }, [id, router]);
+  }, [id, router, fetchReviews]);
+
+  useEffect(() => {
+    const baseUrl = API_BASE_URL.replace('/api/v1', '');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('outfity_token') : '';
+    const evtSource = new EventSource(`${baseUrl}/sse/orders?token=${token || ''}`);
+    evtSource.addEventListener('review_approved', () => { fetchReviews(); });
+    evtSource.addEventListener('review_submitted', () => { fetchReviews(); });
+    evtSource.addEventListener('review_deleted', () => { fetchReviews(); });
+    return () => evtSource.close();
+  }, [fetchReviews]);
 
   if (loading) {
     return (
@@ -138,8 +163,35 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     }
   };
 
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error('Please login to submit a review');
+      router.push('/login');
+      return;
+    }
+    if (reviewRating === 0) {
+      toast.error('Please select a rating');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      toast.error('Please write a review comment');
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      await api.put(`/products/${id}/review`, { rating: reviewRating, comment: reviewComment.trim() });
+      toast.success('Review submitted! Awaiting approval.');
+      await fetchReviews();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   return (
-    <div>
+    <div className="pb-24 lg:pb-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[
           { label: categoryName ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1) : 'Products', href: categoryName ? `/products?category=${categoryName.toLowerCase()}` : '/products' },
@@ -311,14 +363,61 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </div>
               </motion.div>
             ) : (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4 max-w-2xl">
-                {reviews.length === 0 ? (
-                  <p className="text-sm text-stone-400">No reviews yet.</p>
-                ) : (
-                  reviews.map((review: any) => (
-                    <ReviewCard key={review._id} review={review} />
-                  ))
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-2xl">
+                {isAuthenticated && (
+                  <form onSubmit={handleSubmitReview} className="bg-white border border-stone-100 rounded-2xl p-5 sm:p-6 mb-6 space-y-4">
+                    <h3 className="text-sm font-semibold text-stone-900">{userReview ? 'Edit Your Review' : 'Write a Review'}</h3>
+                    <div>
+                      <p className="text-xs font-medium text-stone-700 mb-2">Rating</p>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setReviewRating(star)}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            className="p-1 -m-1 transition-transform hover:scale-110"
+                          >
+                            {star <= (hoverRating || reviewRating) ? (
+                              <HiStar size={22} className="text-amber-400" />
+                            ) : (
+                              <HiOutlineStar size={22} className="text-stone-300 hover:text-amber-300" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-stone-700 mb-1.5">Your Review</label>
+                      <textarea
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        placeholder="Share your experience with this product..."
+                        rows={4}
+                        maxLength={500}
+                        className="w-full px-3.5 py-3 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 resize-none"
+                      />
+                      <p className="text-[11px] text-stone-400 mt-1 text-right">{reviewComment.length}/500</p>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={submittingReview}
+                      className="px-6 py-2.5 bg-stone-900 text-white text-sm font-medium rounded-full hover:bg-stone-800 transition-colors disabled:opacity-50"
+                    >
+                      {submittingReview ? 'Submitting...' : userReview ? 'Update Review' : 'Submit Review'}
+                    </button>
+                  </form>
                 )}
+                <div className="space-y-4">
+                  {reviews.length === 0 ? (
+                    <p className="text-sm text-stone-400">No reviews yet.{isAuthenticated ? '' : ' Sign in to leave a review.'}</p>
+                  ) : (
+                    reviews.map((review: any) => (
+                      <ReviewCard key={review._id} review={review} />
+                    ))
+                  )}
+                </div>
               </motion.div>
             )}
           </div>
@@ -338,7 +437,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-3 lg:hidden z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-3 lg:hidden z-40 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <p className="text-sm font-bold text-stone-900">{formatPrice(displayPrice)}</p>

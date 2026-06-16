@@ -43,10 +43,10 @@ export default function AdminLogin() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold tracking-[0.2em] flex items-center justify-center gap-3">
-              <Image src="/images/logo.png" alt="OUTFITY" width={400} height={120} className="h-28 w-auto" priority />
+              <Image src="/images/logo.png" alt="OUTFITY" width={400} height={120} className="h-10 sm:h-16 lg:h-28 w-auto" priority />
             </h1>
             <p className="text-xs text-gray-400 mt-1">Admin Login</p>
           </div>
@@ -61,7 +61,7 @@ export default function AdminLogin() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@outfity.com"
-                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
+                  className="w-full pl-10 pr-4 py-3 sm:py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
                   required
                 />
               </div>
@@ -76,7 +76,7 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-10 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
+                  className="w-full pl-10 pr-10 py-3 sm:py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
                   required
                 />
                 <button
@@ -91,7 +91,7 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-all active:scale-[0.98]"
+              className="w-full py-3 sm:py-2.5 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-all active:scale-[0.98]"
             >
               Sign In
             </button>

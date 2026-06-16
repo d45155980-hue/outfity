@@ -250,13 +250,13 @@ export default function Home() {
       )}
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 py-16 lg:py-24 px-8 text-center">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-stone-900 via-stone-800 to-amber-900 py-16 lg:py-24 px-4 sm:px-8 md:px-12 text-center">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.05)_0%,_transparent_70%)]" />
           <div className="relative max-w-lg mx-auto">
-            <p className="text-amber-400 text-sm font-medium tracking-[0.2em] uppercase mb-3">Summer Collection 2026</p>
-            <h2 className="text-3xl lg:text-5xl font-bold text-white tracking-tight">Sun-Kissed Style</h2>
-            <p className="mt-4 text-stone-400 text-sm">Discover light, breathable fabrics and vibrant hues for the season ahead.</p>
-            <Link href="/products?category=women" className="inline-flex items-center gap-2 mt-8 px-8 py-3.5 bg-white text-stone-900 text-sm font-medium rounded-full hover:bg-stone-100 transition-all">
+            <p className="text-amber-400 text-xs sm:text-sm font-medium tracking-[0.2em] uppercase mb-3">Summer Collection 2026</p>
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white tracking-tight">Sun-Kissed Style</h2>
+            <p className="mt-4 text-stone-400 text-xs sm:text-sm">Discover light, breathable fabrics and vibrant hues for the season ahead.</p>
+            <Link href="/products?category=women" className="inline-flex items-center gap-2 mt-6 sm:mt-8 px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-stone-900 text-xs sm:text-sm font-medium rounded-full hover:bg-stone-100 transition-all">
               Explore Collection
             </Link>
           </div>

@@ -72,17 +72,17 @@ function ProductsContent() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumb items={[{ label: 'Products' }]} />
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start sm:items-center justify-between mb-4 sm:mb-6 flex-col sm:flex-row gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-bold text-stone-900 tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-bold text-stone-900 tracking-tight">
             {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'All Products'}
           </h1>
-          <p className="text-sm text-stone-500 mt-0.5">Showing {products.length} of {total} results</p>
+          <p className="text-xs sm:text-sm text-stone-500 mt-0.5">{loading ? 'Searching...' : `Showing ${products.length} of ${total} results`}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden flex items-center gap-1.5 px-3 py-2 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
+            className="lg:hidden flex items-center gap-1.5 px-4 py-3 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
           >
             <HiOutlineAdjustments size={16} />
             Filters
@@ -90,7 +90,7 @@ function ProductsContent() {
           <select
             value={sort}
             onChange={(e) => updateParams({ sort: e.target.value })}
-            className="text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-600 focus:outline-none focus:ring-2 focus:ring-stone-300"
+            className="text-xs border border-stone-200 rounded-lg px-3 py-3 bg-white text-stone-600 focus:outline-none focus:ring-2 focus:ring-stone-300"
           >
             {sortOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -99,8 +99,11 @@ function ProductsContent() {
         </div>
       </div>
 
-      <div className="flex gap-8">
-        <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div className="hidden lg:block w-56 shrink-0">
+          <FilterSidebar isOpen={true} onClose={() => {}} />
+        </div>
+        <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isMobile={true} />
 
         <div className="flex-1 min-w-0">
           {loading ? (

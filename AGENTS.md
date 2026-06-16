@@ -72,8 +72,13 @@ Complete a full-stack fashion e-commerce platform (OUTFITY) with Next.js 16, Exp
 - **Flutter unused imports cleaned**: 14+ lines removed across 8 files
 - **Flutter `notification_permission_screen` removed**: No backend support
 
+### Done
+- **(New) Backend deployed to Railway**: Live at `https://api-production-78a62.up.railway.app` — all endpoints tested (health, products, categories, banners, coupons, auth login). Stripe/Razorpay graceful init (no crash on placeholder keys). CORS allows Vercel frontends. Domain created via `serviceDomainCreate` mutation.
+- **(New) Frontend deployed to Vercel**: Live at `https://myoutfity.vercel.app` — `NEXT_PUBLIC_API_URL` set to Railway backend. `next.config.ts` remotePatterns includes `**.up.railway.app`.
+- **(New) Railway CLI installed**: Used `railway up` to deploy from local backend directory. `RAILWAY_API_TOKEN` env var used for auth.
+- **(New) Stripe/Razorpay graceful init**: `paymentController.js` wrapped in try-catch — no boot crash when env vars are placeholder values (`your_stripe_secret`, `your_razorpay_key`). Null checks added in route handlers (returns 503 if not configured).
+
 ### In Progress
-- **(none)**
 
 ### Blocked
 - **Payment integration**: Stripe/Razorpay frontend code is stub; no `paymentIntents` or checkout sessions created — backend `paymentController.js` routes exist but untested
@@ -116,13 +121,16 @@ Complete a full-stack fashion e-commerce platform (OUTFITY) with Next.js 16, Exp
 7. Run `flutter run -d chrome` to test on web browser
 
 ## Critical Context
-- Backend on **port 5000**, frontend on **port 3000**
-- API base: `http://localhost:5000/api/v1` (constants.ts and `ApiConfig.baseUrl`)
+- Backend deployed on **Railway** at `https://api-production-78a62.up.railway.app` (port 8080 internally)
+- Frontend deployed on **Vercel** at `https://myoutfity.vercel.app`
+- Local dev: backend on **port 5000**, frontend on **port 3000**
+- API base: `http://localhost:5000/api/v1` (local) or `https://api-production-78a62.up.railway.app/api/v1` (production via `NEXT_PUBLIC_API_URL`)
 - JWT in **both** httpOnly cookie and localStorage key `outfity_token`
 - Axios interceptor: reads `localStorage.outfity_token` → sets `Authorization: Bearer`; captures `response.data.token` → saves; 401 retries `POST /auth/refresh` then original request
 - Image URL format in DB: `http://localhost:5000/uploads/#{hex}.#{ext}` — served by `express.static('/uploads')`
 - Admin: `npm run seed:admin` (admin@outfity.com / admin123); after `seed:cleanup`, run `seed:admin` then `seed`
 - Backend routes: `GET /auth/logout` (not POST), `POST /auth/google`, `POST /auth/refresh`, `PUT /auth/update`, `PUT /auth/password` (expects `confirmPassword`), `GET /auth/me`, `GET /coupons/active` (public), `GET /banners` (public)
+- Railway API token: `30c941f0-7012-4c64-a708-051869cb964a`
 - Order field names: `orderItems`, `itemsPrice`, `shippingPrice`, `deliveryCharge`, `totalPrice` — NOT `items`/`subtotal`/`shipping`/`total`
 - Shipping address shape: `{ fullName, phone, address, city, state, country, zipCode }`
 - Order statuses: `Processing`, `Confirmed`, `Packed`, `Shipped`, `OutForDelivery`, `Delivered`, `Cancelled`

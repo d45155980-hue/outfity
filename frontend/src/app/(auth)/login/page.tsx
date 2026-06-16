@@ -63,7 +63,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-stone-100 p-8 sm:p-10">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold text-stone-900 tracking-tight inline-block mb-4">
-            <Image src="/images/logo.png" alt="OUTFITY" width={440} height={136} className="h-32 w-auto mx-auto" priority />
+            <Image src="/images/logo.png" alt="OUTFITY" width={440} height={136} className="h-10 sm:h-16 lg:h-32 w-auto mx-auto" priority />
           </Link>
           <h1 className="text-2xl font-bold text-stone-900">Welcome Back</h1>
           <p className="text-sm text-stone-500 mt-1">Sign in to your account</p>

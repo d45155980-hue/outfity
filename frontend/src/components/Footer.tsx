@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Link href="/" className="inline-block mb-6">
-              <Image src="/images/logo-white.png" alt="OUTFITY" width={420} height={126} className="h-28 w-auto" priority />
+              <Image src="/images/logo-white.png" alt="OUTFITY" width={420} height={126} className="h-10 sm:h-14 lg:h-28 w-auto" priority />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Premium fashion destination for the modern individual. Discover curated

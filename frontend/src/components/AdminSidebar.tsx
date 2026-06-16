@@ -41,7 +41,7 @@ export default function AdminSidebar() {
     <div className="py-6">
       <div className="px-6 mb-8">
         <Link href="/admin">
-          <Image src="/images/logo-white.png" alt="OUTFITY" width={400} height={120} className="h-28 w-auto opacity-90" priority />
+          <Image src="/images/logo-white.png" alt="OUTFITY" width={400} height={120} className="h-10 sm:h-14 lg:h-28 w-auto opacity-90" priority />
         </Link>
         <p className="text-xs text-gray-400 mt-1">Admin Panel</p>
       </div>
@@ -75,10 +75,10 @@ export default function AdminSidebar() {
     <>
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-sm border border-gray-100"
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-white rounded-lg shadow-sm border border-gray-100"
         aria-label="Open sidebar"
       >
-        <HiOutlineMenu className="w-5 h-5" />
+        <HiOutlineMenu className="w-6 h-6" />
       </button>
 
       <aside className="hidden lg:block w-64 min-h-screen bg-white border-r border-gray-100 flex-shrink-0">

@@ -118,13 +118,13 @@ function SearchContent() {
             </h3>
             <div className="space-y-1">
               {recentSearches.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => { setSearchInput(s); handleSearchImmediate(s); }}
-                  className="block text-sm text-stone-600 hover:text-stone-900 transition-colors"
-                >
-                  {s}
-                </button>
+                  <button
+                    key={s}
+                    onClick={() => { setSearchInput(s); handleSearchImmediate(s); }}
+                    className="block w-full text-left py-3 px-3 text-sm text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors"
+                  >
+                    {s}
+                  </button>
               ))}
             </div>
           </motion.div>
@@ -134,13 +134,13 @@ function SearchContent() {
             </h3>
             <div className="space-y-1">
               {['premium cotton', 'evening wear', 'running shoes', 'leather bags'].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => { setSearchInput(s); handleSearchImmediate(s); }}
-                  className="block text-sm text-stone-600 hover:text-stone-900 transition-colors"
-                >
-                  {s}
-                </button>
+                  <button
+                    key={s}
+                    onClick={() => { setSearchInput(s); handleSearchImmediate(s); }}
+                    className="block w-full text-left py-3 px-3 text-sm text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-colors"
+                  >
+                    {s}
+                  </button>
               ))}
             </div>
           </motion.div>
@@ -157,7 +157,7 @@ function SearchContent() {
             </p>
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden flex items-center gap-1.5 px-3 py-2 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
+              className="lg:hidden flex items-center gap-1.5 px-4 py-3 border border-stone-200 rounded-lg text-xs font-medium text-stone-600 hover:bg-stone-50 transition-colors"
             >
               <HiOutlineAdjustments size={14} /> Filters
             </button>
@@ -197,8 +197,11 @@ function SearchContent() {
             </motion.div>
           )}
 
-          <div className="flex gap-8">
-            <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <div className="hidden lg:block w-56 shrink-0">
+              <FilterSidebar isOpen={true} onClose={() => {}} />
+            </div>
+            <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isMobile={true} />
             <div className="flex-1 min-w-0">
               <AnimatePresence mode="wait">
                 {loading ? (

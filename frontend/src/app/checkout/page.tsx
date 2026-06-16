@@ -296,20 +296,20 @@ function CheckoutForm() {
                     <input
                       type={type} value={(form as any)[field]} onChange={(e) => updateField(field, e.target.value)}
                       placeholder={placeholder}
-                      className={`w-full px-3.5 py-2.5 bg-stone-50 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 ${errors[field] ? 'border-red-300' : 'border-stone-200'}`}
+                      className={`w-full px-3.5 py-3 sm:py-2.5 bg-stone-50 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 ${errors[field] ? 'border-red-300' : 'border-stone-200'}`}
                     />
                     {errors[field] && <p className="text-red-500 text-[11px] mt-0.5">{errors[field]}</p>}
                   </div>
                 ))}
                 <div>
                   <label className="block text-xs font-medium text-stone-700 mb-1.5">Country</label>
-                  <select value={form.country} onChange={(e) => updateField('country', e.target.value)} className="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300">
+                  <select value={form.country} onChange={(e) => updateField('country', e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300">
                     {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-stone-700 mb-1.5">ZIP / Postcode</label>
-                  <input type="text" value={form.zipCode} onChange={(e) => updateField('zipCode', e.target.value)} placeholder="400001" className={`w-full px-3.5 py-2.5 bg-stone-50 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 ${errors.zipCode ? 'border-red-300' : 'border-stone-200'}`} />
+                  <input type="text" value={form.zipCode} onChange={(e) => updateField('zipCode', e.target.value)} placeholder="400001" className={`w-full px-3.5 py-3 sm:py-2.5 bg-stone-50 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 ${errors.zipCode ? 'border-red-300' : 'border-stone-200'}`} />
                   {errors.zipCode && <p className="text-red-500 text-[11px] mt-0.5">{errors.zipCode}</p>}
                 </div>
               </div>

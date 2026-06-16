@@ -64,7 +64,8 @@ export default function FilterSidebar({ isOpen, onClose, isMobile = false }: Fil
     else params.delete(key);
     params.set('page', '1');
     router.push(`/products?${params.toString()}`);
-  }, [searchParams, router]);
+    if (isMobile) onClose();
+  }, [searchParams, router, isMobile, onClose]);
 
   const toggleArrayParam = useCallback((key: string, value: string) => {
     const current = searchParams.get(key)?.split(',').filter(Boolean) || [];
@@ -74,6 +75,7 @@ export default function FilterSidebar({ isOpen, onClose, isMobile = false }: Fil
 
   const clearAll = () => {
     router.push('/products');
+    if (isMobile) onClose();
   };
 
   const content = (
@@ -156,7 +158,7 @@ export default function FilterSidebar({ isOpen, onClose, isMobile = false }: Fil
             <motion.div initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'tween', duration: 0.3 }} className="fixed top-0 left-0 bottom-0 w-80 bg-white z-50 overflow-y-auto">
               <div className="sticky top-0 bg-white border-b border-gray-100 p-4 flex items-center justify-between z-10">
                 <h3 className="font-semibold">Filters</h3>
-                <button onClick={onClose} aria-label="Close filters"><HiOutlineX className="w-5 h-5" /></button>
+                <button onClick={onClose} aria-label="Close filters" className="p-3 -mr-2"><HiOutlineX className="w-5 h-5" /></button>
               </div>
               {content}
             </motion.div>

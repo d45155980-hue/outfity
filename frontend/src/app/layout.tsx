@@ -41,7 +41,7 @@ export default function RootLayout({
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <ClientLayout>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pt-12 sm:pt-14 lg:pt-32">{children}</main>
             <Footer />
             <Toaster
               position="top-right"

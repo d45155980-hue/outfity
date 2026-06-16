@@ -76,13 +76,13 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${
-        isScrolled ? 'shadow-sm py-2' : 'py-4'
+        isScrolled ? 'shadow-sm py-px sm:py-0' : 'py-px sm:py-0.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <button
-            className="lg:hidden p-2 -ml-2"
+            className="lg:hidden p-3 -ml-2"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
           >
@@ -90,7 +90,7 @@ export default function Header() {
           </button>
 
           <Link href="/" className="flex-shrink-0">
-            <Image src="/images/logo.png" alt="OUTFITY" width={440} height={136} className="h-32 w-auto" priority />
+            <Image src="/images/logo.png" alt="OUTFITY" width={440} height={136} className="h-8 sm:h-10 lg:h-28 w-auto" priority />
           </Link>
 
           <nav className="hidden lg:flex items-center space-x-8">
@@ -106,23 +106,23 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 hover:text-gray-600 transition-colors"
+              className="p-2 lg:p-2 hover:text-gray-600 transition-colors"
               aria-label="Search"
             >
-              <HiOutlineSearch className="w-5 h-5" />
+              <HiOutlineSearch className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5" />
             </button>
 
             <NotificationBell />
 
             <Link
               href="/wishlist"
-              className="hidden sm:flex relative p-2 hover:text-gray-600 transition-colors"
+              className="flex relative p-2 lg:p-2 hover:text-gray-600 transition-colors"
               aria-label="Wishlist"
             >
-              <HiOutlineHeart className="w-5 h-5" />
+              <HiOutlineHeart className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5" />
               {mounted && wishlistItems.length > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
                   {wishlistItems.length}
@@ -133,10 +133,10 @@ export default function Header() {
             <div className="relative" ref={cartRef}>
               <button
                 onClick={() => setIsCartOpen(!isCartOpen)}
-                className="relative p-2 hover:text-gray-600 transition-colors"
+                className="relative p-2 lg:p-2 hover:text-gray-600 transition-colors"
                 aria-label="Cart"
               >
-                <HiOutlineShoppingBag className="w-5 h-5" />
+                <HiOutlineShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5" />
                 {mounted && cartCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
                     {cartCount}
@@ -209,13 +209,13 @@ export default function Header() {
             </div>
 
             {isAuthenticated && user ? (
-              <div className="hidden sm:flex items-center relative group">
+              <div className="flex items-center relative group">
                 <button
                   onClick={() => router.push('/dashboard')}
-                  className="p-2 hover:text-gray-600 transition-colors"
+                  className="p-2 lg:p-2 hover:text-gray-600 transition-colors"
                   aria-label="My Account"
                 >
-                  <HiOutlineUser className="w-5 h-5" />
+                  <HiOutlineUser className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5" />
                 </button>
                 <div className="absolute right-0 top-full mt-2 w-40 bg-white shadow-lg border border-gray-100 rounded-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                   <Link href="/dashboard" className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-50">My Profile</Link>
@@ -227,9 +227,9 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:flex items-center gap-2 p-2 hover:text-gray-600 transition-colors"
+                className="flex items-center gap-2 p-2 lg:p-2 hover:text-gray-600 transition-colors"
               >
-                <HiOutlineUser className="w-5 h-5" />
+                <HiOutlineUser className="w-5 h-5 sm:w-6 sm:h-6 lg:w-5 lg:h-5" />
               </Link>
             )}
           </div>
@@ -260,7 +260,7 @@ export default function Header() {
                       }
                     }}
                     placeholder="Search for products..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black transition-colors"
+                    className="w-full pl-10 pr-4 py-3 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black transition-colors"
                     autoFocus
                   />
                 </div>
@@ -288,13 +288,13 @@ export default function Header() {
               className="fixed top-0 left-0 bottom-0 w-72 bg-white z-50 lg:hidden"
             >
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <Image src="/images/logo.png" alt="OUTFITY" width={360} height={110} className="h-28 w-auto" />
+                <Image src="/images/logo.png" alt="OUTFITY" width={360} height={110} className="h-8 sm:h-10 w-auto" />
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2"
+                  className="p-3"
                   aria-label="Close menu"
                 >
-                  <HiOutlineX className="w-5 h-5" />
+                  <HiOutlineX className="w-6 h-6" />
                 </button>
               </div>
               <nav className="p-4 space-y-1">

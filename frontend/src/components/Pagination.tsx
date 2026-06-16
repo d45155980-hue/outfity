@@ -25,14 +25,14 @@ export default function Pagination({ currentPage, totalPages, onPageChange, base
   const renderLink = (page: number, children: React.ReactNode) => {
     if (onPageChange) {
       return (
-        <button onClick={() => onPageChange(page)} className="w-9 h-9 flex items-center justify-center text-xs font-medium rounded-full transition-colors">
+        <button onClick={() => onPageChange(page)} className="w-10 h-10 flex items-center justify-center text-xs font-medium rounded-full transition-colors">
           {children}
         </button>
       );
     }
     const url = baseUrl ? `${baseUrl}&page=${page}` : `?page=${page}`;
     return (
-      <Link href={url} className="w-9 h-9 flex items-center justify-center text-xs font-medium rounded-full transition-colors">
+      <Link href={url} className="w-10 h-10 flex items-center justify-center text-xs font-medium rounded-full transition-colors">
         {children}
       </Link>
     );
@@ -40,15 +40,15 @@ export default function Pagination({ currentPage, totalPages, onPageChange, base
 
   return (
     <div className="flex items-center justify-center gap-1.5 mt-10">
-      {currentPage > 1 && renderLink(currentPage - 1, <HiOutlineChevronLeft size={14} />)}
+      {currentPage > 1 && renderLink(currentPage - 1, <HiOutlineChevronLeft size={16} />)}
 
       {pages.map((page, idx) =>
         typeof page === 'string' ? (
-          <span key={`ellipsis-${idx}`} className="w-9 h-9 flex items-center justify-center text-xs text-stone-400">...</span>
+          <span key={`ellipsis-${idx}`} className="w-10 h-10 flex items-center justify-center text-xs text-stone-400">...</span>
         ) : (
           <div key={page}>
             {page === currentPage ? (
-              <span className="w-9 h-9 flex items-center justify-center text-xs font-medium rounded-full bg-stone-900 text-white">
+              <span className="w-10 h-10 flex items-center justify-center text-xs font-medium rounded-full bg-stone-900 text-white">
                 {page}
               </span>
             ) : (
@@ -58,7 +58,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange, base
         )
       )}
 
-      {currentPage < totalPages && renderLink(currentPage + 1, <HiOutlineChevronRight size={14} />)}
+      {currentPage < totalPages && renderLink(currentPage + 1, <HiOutlineChevronRight size={16} />)}
     </div>
   );
 }

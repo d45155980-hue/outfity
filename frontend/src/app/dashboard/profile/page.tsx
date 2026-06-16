@@ -81,7 +81,7 @@ export default function ProfilePage() {
               type={type || 'text'}
               value={value}
               onChange={(e) => setProfile((prev) => ({ ...prev, [field]: e.target.value }))}
-              className="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+              className="w-full px-3.5 py-3 sm:py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
             />
           </div>
         ))}
@@ -90,7 +90,7 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={profileLoading}
-          className="px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-50"
+          className="w-full sm:w-auto px-6 py-3 sm:py-2.5 rounded-full text-sm font-medium transition-all bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-50"
         >
           {profileLoading ? 'Updating...' : 'Update Profile'}
         </button>
@@ -109,7 +109,7 @@ export default function ProfilePage() {
               type="password"
               value={(password as any)[field]}
               onChange={(e) => setPassword((prev) => ({ ...prev, [field]: e.target.value }))}
-              className="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
+              className="w-full px-3.5 py-3 sm:py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-stone-300"
             />
           </div>
         ))}
@@ -118,7 +118,7 @@ export default function ProfilePage() {
         <button
           type="submit"
           disabled={passwordLoading}
-          className="px-6 py-2.5 rounded-full text-sm font-medium transition-all bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-50"
+          className="w-full sm:w-auto px-6 py-3 sm:py-2.5 rounded-full text-sm font-medium transition-all bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-50"
         >
           {passwordLoading ? 'Changing...' : 'Change Password'}
         </button>

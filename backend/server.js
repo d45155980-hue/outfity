@@ -30,8 +30,7 @@ const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
-  'https://outfity.vercel.app',
-  'https://frontend-pi-six-86.vercel.app',
+  'https://myoutfity.vercel.app',
   /^http:\/\/localhost:\d+$/,
 ];
 app.use(cors({
