@@ -1,10 +1,18 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
 const stripHtml = (html) => html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 
 const sendEmail = async (options) => {
+  const host = await new Promise((resolve) => {
+    dns.resolve4(process.env.SMTP_HOST, (err, addresses) => {
+      if (err || !addresses || !addresses.length) resolve(process.env.SMTP_HOST);
+      else resolve(addresses[0]);
+    });
+  });
+
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host,
     port: Number(process.env.SMTP_PORT),
     secure: false,
     requireTLS: true,
