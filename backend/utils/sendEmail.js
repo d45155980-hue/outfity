@@ -1,53 +1,58 @@
 const https = require('https');
+const http = require('http');
 
 const stripHtml = (html) => html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 
-const sendEmail = async (options) => {
+const sendViaResend = (options) => {
   const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error('RESEND_API_KEY not set');
 
-  if (apiKey) {
-    const data = JSON.stringify({
-      from: 'OUTFITY <onboarding@resend.dev>',
-      to: [options.email],
-      subject: options.subject,
-      text: options.text || stripHtml(options.html || ''),
-      html: options.html || '',
+  const data = JSON.stringify({
+    from: 'OUTFITY <onboarding@resend.dev>',
+    to: [options.email],
+    subject: options.subject,
+    text: options.text || stripHtml(options.html || ''),
+    html: options.html || '',
+  });
+
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'api.resend.com',
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data),
+      },
+      timeout: 15000,
     });
-
-    try {
-      await new Promise((resolve, reject) => {
-        const req = https.request(
-          {
-            hostname: 'api.resend.com',
-            path: '/emails',
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              'Content-Type': 'application/json',
-              'Content-Length': Buffer.byteLength(data),
-            },
-            timeout: 15000,
-          },
-          (res) => {
-            let body = '';
-            res.on('data', (c) => (body += c));
-            res.on('end', () => {
-              if (res.statusCode >= 200 && res.statusCode < 300) resolve(true);
-              else reject(new Error(`Resend ${res.statusCode}: ${body}`));
-            });
-          }
-        );
-        req.on('error', reject);
-        req.on('timeout', () => { req.destroy(); reject(new Error('Resend timeout')); });
-        req.write(data);
-        req.end();
+    req.on('response', (res) => {
+      let body = '';
+      res.on('data', (c) => (body += c));
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) resolve(true);
+        else reject(new Error(`Resend ${res.statusCode}: ${body.slice(0, 200)}`));
       });
-      return;
-    } catch (err) {
-      console.log('Resend email failed:', err.message);
-    }
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('Resend timeout')); });
+    req.write(data);
+    req.end();
+  });
+};
+
+const sendEmail = async (options) => {
+  console.log('sendEmail called, RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+
+  try {
+    await sendViaResend(options);
+    return;
+  } catch (err) {
+    console.log('Resend email failed:', err.message);
   }
 
+  console.log('Falling back to SMTP...');
   const nodemailer = require('nodemailer');
   const dns = require('dns');
 
