@@ -11,11 +11,14 @@ const createTransport = async () => {
     });
   });
 
+  const port = Number(process.env.SMTP_PORT);
+  const isSSL = port === 465;
+
   return nodemailer.createTransport({
     host,
-    port: Number(process.env.SMTP_PORT),
-    secure: false,
-    requireTLS: true,
+    port,
+    secure: isSSL,
+    requireTLS: !isSSL,
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 15000,
