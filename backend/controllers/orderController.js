@@ -64,39 +64,35 @@ exports.createOrder = async (req, res, next) => {
         `<tr><td style="padding:8px;border-bottom:1px solid #eee;">${item.name}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">${item.quantity}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">₹${item.price}</td></tr>`
     ).join('');
 
-    try {
-      await sendEmail({
-        email: shippingAddress.email,
-        subject: `Order Confirmed #${order._id} - OUTFITY`,
-        html: `
-          <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
-            <div style="background:#1c1917;color:#fff;padding:24px;text-align:center;border-radius:12px 12px 0 0;">
-              <h1 style="margin:0;font-size:22px;">OUTFITY</h1>
-              <p style="margin:4px 0 0;opacity:.8;">Order Confirmed</p>
+    sendEmail({
+      email: shippingAddress.email,
+      subject: `Order Confirmed #${order._id} - OUTFITY`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">
+          <div style="background:#1c1917;color:#fff;padding:24px;text-align:center;border-radius:12px 12px 0 0;">
+            <h1 style="margin:0;font-size:22px;">OUTFITY</h1>
+            <p style="margin:4px 0 0;opacity:.8;">Order Confirmed</p>
+          </div>
+          <div style="padding:24px;background:#fff;border:1px solid #eee;">
+            <p style="margin:0 0 16px;">Hi <strong>${shippingAddress.fullName}</strong>,</p>
+            <p style="margin:0 0 16px;color:#555;">Your order has been placed successfully.</p>
+            <p style="margin:0 0 20px;font-size:13px;color:#888;">Order #${order._id}</p>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead><tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Item</th><th style="padding:8px;text-align:center;">Qty</th><th style="padding:8px;text-align:right;">Price</th></tr></thead>
+              <tbody>${itemsHtml}</tbody>
+            </table>
+            <div style="border-top:2px solid #1c1917;margin-top:12px;padding-top:12px;font-size:13px;">
+              <p style="display:flex;justify-content:space-between;margin:4px 0;"><span>Subtotal</span><span>₹${itemsPrice}</span></p>
+              <p style="display:flex;justify-content:space-between;margin:4px 0;"><span>Shipping</span><span>₹${shippingPrice}</span></p>
+              ${discount ? `<p style="display:flex;justify-content:space-between;margin:4px 0;color:#16a34a;"><span>Discount</span><span>-₹${discount}</span></p>` : ''}
+              <p style="display:flex;justify-content:space-between;margin:8px 0 0;font-weight:bold;font-size:15px;"><span>Total</span><span>₹${totalPrice}</span></p>
             </div>
-            <div style="padding:24px;background:#fff;border:1px solid #eee;">
-              <p style="margin:0 0 16px;">Hi <strong>${shippingAddress.fullName}</strong>,</p>
-              <p style="margin:0 0 16px;color:#555;">Your order has been placed successfully.</p>
-              <p style="margin:0 0 20px;font-size:13px;color:#888;">Order #${order._id}</p>
-              <table style="width:100%;border-collapse:collapse;font-size:13px;">
-                <thead><tr style="background:#f5f5f5;"><th style="padding:8px;text-align:left;">Item</th><th style="padding:8px;text-align:center;">Qty</th><th style="padding:8px;text-align:right;">Price</th></tr></thead>
-                <tbody>${itemsHtml}</tbody>
-              </table>
-              <div style="border-top:2px solid #1c1917;margin-top:12px;padding-top:12px;font-size:13px;">
-                <p style="display:flex;justify-content:space-between;margin:4px 0;"><span>Subtotal</span><span>₹${itemsPrice}</span></p>
-                <p style="display:flex;justify-content:space-between;margin:4px 0;"><span>Shipping</span><span>₹${shippingPrice}</span></p>
-                ${discount ? `<p style="display:flex;justify-content:space-between;margin:4px 0;color:#16a34a;"><span>Discount</span><span>-₹${discount}</span></p>` : ''}
-                <p style="display:flex;justify-content:space-between;margin:8px 0 0;font-weight:bold;font-size:15px;"><span>Total</span><span>₹${totalPrice}</span></p>
-              </div>
-            </div>
-            <div style="text-align:center;padding:16px;font-size:11px;color:#999;">
-              <p style="margin:0;">OUTFITY — Premium Fashion</p>
-            </div>
-          </div>`,
-      });
-    } catch (emailError) {
-      console.log('Email sending failed:', emailError.message);
-    }
+          </div>
+          <div style="text-align:center;padding:16px;font-size:11px;color:#999;">
+            <p style="margin:0;">OUTFITY — Premium Fashion</p>
+          </div>
+        </div>`,
+    }).catch((err) => console.log('Email sending failed:', err.message));
 
     sse.broadcast('order_created', { order: order._id });
     notifyBoth(req.user.id, 'order_created', { orderNumber: order._id.toString().slice(-8).toUpperCase(), orderId: order._id });

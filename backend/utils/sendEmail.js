@@ -3,7 +3,7 @@ const dns = require('dns');
 
 const stripHtml = (html) => html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 
-const sendEmail = async (options) => {
+const createTransport = async () => {
   const host = await new Promise((resolve) => {
     dns.resolve4(process.env.SMTP_HOST, (err, addresses) => {
       if (err || !addresses || !addresses.length) resolve(process.env.SMTP_HOST);
@@ -11,16 +11,26 @@ const sendEmail = async (options) => {
     });
   });
 
-  const transporter = nodemailer.createTransport({
+  return nodemailer.createTransport({
     host,
     port: Number(process.env.SMTP_PORT),
     secure: false,
     requireTLS: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: {
       user: process.env.SMTP_EMAIL,
       pass: process.env.SMTP_PASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
+};
+
+const sendEmail = async (options) => {
+  const transporter = await createTransport();
 
   const mailOptions = {
     from: `"OUTFITY" <${process.env.SMTP_EMAIL}>`,
